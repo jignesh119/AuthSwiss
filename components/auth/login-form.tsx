@@ -30,10 +30,12 @@ export default function LoginForm(props: {}) {
   const [isPending, startTransition] = useTransition();
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
     startTransition(() => {
-      //BUG: fix this bug
-      login(data).then(data=>{setError(data.error);setSuccess(data.success)
+      login(data).then((data) => {
+        setError(data.error);
+        setSuccess(data.success);
+      });
     });
-  });
+  };
   return (
     <CardWrapper
       headerLabel="Welcome back"
