@@ -2,6 +2,9 @@
 
 import * as z from "zod";
 import { RegisterSchema } from "@/schemas";
+import bcrypt from "bcrypt";
+import { db } from "@/lib/db";
+import { getUserByEmail } from "@/data/user";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
@@ -9,6 +12,14 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   if (!validatedFields.success) {
     return { error: "Invalid fields!" };
   }
+  const { email, password, name } = validatedFields.data;
+  const hashedPwd = await bcrypt.hash(password, 10);
 
-  return { sucess: "Confirmation email sent!" };
+  const existingUser = await getUserByEmail(email);
+  if (existingUser) return { error: "User already exists!" };
+
+  await db.user.create({ data: { email, name, password: hashedPwd } });
+  //TODO: Send confirmation email
+  //restrict users who are not confirmed to login
+  return { sucess: "user created Successfully" };
 };
