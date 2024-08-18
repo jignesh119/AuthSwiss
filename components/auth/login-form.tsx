@@ -28,7 +28,11 @@ export default function LoginForm(props: {}) {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
+    //as its client comp better to use transition to use server actions 4 clean ui
+    setError("");
+    setSuccess("");
     startTransition(() => {
       login(data).then((data) => {
         setError(data.error);
@@ -83,8 +87,8 @@ export default function LoginForm(props: {}) {
               )}
             />
           </div>
-          <FormError message="" />
-          <FormSuccess message="" />
+          <FormError message={error} />
+          <FormSuccess message={success} />
           <Button type="submit" className="w-full" disabled={isPending}>
             Submit
           </Button>
