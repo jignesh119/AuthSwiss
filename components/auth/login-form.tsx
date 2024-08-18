@@ -35,8 +35,11 @@ export default function LoginForm(props: {}) {
     setSuccess("");
     startTransition(() => {
       login(data).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+        if (data && "success" in data) {
+          setSuccess(data?.success as string);
+        } else {
+          setError(data?.error);
+        }
       });
     });
   };

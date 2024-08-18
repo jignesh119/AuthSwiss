@@ -1,3 +1,4 @@
+// NOTE: continue code with antonio from 2:40
 // import { auth } from "@/auth"; not needed
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
@@ -21,18 +22,19 @@ export default auth((req) => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   if (isApiAuthRoute) {
-    return undefined;
-  }
-  if (isAuthRoute) {
+    console.log(`it isApiAuthRoute`);
+    // return null;
+  } else if (isAuthRoute) {
     if (isLoggedin) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    return undefined;
-  }
-  if (!isLoggedin && !isPublicRoute) {
+    console.log(`it isAuthRoute`);
+    // return null;
+  } else if (!isLoggedin && !isPublicRoute) {
     return Response.redirect(new URL("/auth/login", nextUrl));
   }
-  return undefined;
+  console.log("middleware accepted, continuing");
+  // return null;
 });
 
 //prisma and edge compatibility: db doesnt support edge
