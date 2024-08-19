@@ -16,6 +16,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   }
   const { email, password } = validatedFields.data;
   try {
+    //WAY TO WORK WITH PROVIDERS
+    //await signIn("google")..in a server action
     await signIn("credentials", {
       email,
       password,
@@ -23,7 +25,8 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     });
   } catch (e) {
     if (e instanceof AuthError) {
-      return { error: e.message };
+      console.log(e.message);
+      return { error: `Something went wrong` };
     }
     throw e;
   }
