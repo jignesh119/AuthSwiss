@@ -22,7 +22,7 @@ export default auth((req) => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   if (isApiAuthRoute) {
-    console.log(`it isApiAuthRoute`);
+    console.log(`it isApiAuthRoute, continuing`);
     // return null;
   } else if (isAuthRoute) {
     if (isLoggedin) {

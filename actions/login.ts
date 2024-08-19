@@ -2,10 +2,11 @@
 //TODO: server comps,client comps => way to use nextAuth
 import * as z from "zod";
 import { LoginSchema } from "../schemas";
-import { revalidatePath } from "next/cache";
 import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
+import { getUserByEmail } from "@/data/user";
+import { generateVerificationToken } from "@/lib/token";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   //"use server" if this server action is not in a spt file
@@ -15,9 +16,23 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     return { error: "error validating login fields" };
   }
   const { email, password } = validatedFields.data;
+  const existingUser = await getUserByEmail(email);
+  if (!existingUser || !existingUser.password || !existingUser.email) {
+    return { error: "User not found" };
+  }
+
+  //FIX:
+  //if user registers, sent conf email, but user still not verified, hence new token each time
+  if (!existingUser.emailVerified) {
+    await generateVerificationToken(email);
+    return { success: "Confirmation email sent" };
+  }
+
   try {
-    //WAY TO WORK WITH PROVIDERS
+    //ONE-WAY TO WORK WITH PROVIDERS
     //await signIn("google")..in a server action
+    //OR
+    //in comp, import {signIn} from "next-auth/react"
     await signIn("credentials", {
       email,
       password,

@@ -6,6 +6,7 @@ import { getUserById } from "./data/user";
 
 //these endpoints are used to authenticate users at custom login/register
 export const { auth, handlers, signIn, signOut } = NextAuth({
+  pages: { signIn: "/auth/login", error: "/auth/error" },
   events: {
     async linkAccount({ user }) {
       //if user REGISTER with OAUTH- verifyEmail as oauth providers take of it b4hand
@@ -18,9 +19,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
     //NOTE: called after signIn/signOut/... are triggered
     async signIn({ user, account, profile, email, credentials }) {
-      // LATER
-      // const existingUser = await getUserById(user.id as string);
-      // if (!existingUser || !existingUser.emailVerified) return false;
+      // allow oauth without email verification
+      const existingUser = await getUserById(user.id as string);
+      if (account!.provider != "credentials") return true;
+
+      if (!existingUser!.emailVerified) return false;
+
       return true;
     },
     async session({ session, token, user }) {
