@@ -5,6 +5,8 @@ import { db } from "@/lib/db";
 import { getUserByEmail } from "@/data/user";
 import { NewPasswordSchema } from "@/schemas";
 import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
+import bcrypt from "bcryptjs";
+
 export const newPassword = async (
   values: z.infer<typeof NewPasswordSchema>,
   token: string,
@@ -14,15 +16,23 @@ export const newPassword = async (
   if (!validatedFields.success) {
     return { error: "Invalid password" };
   }
+  const { password } = validatedFields.data;
 
   const existingToken = await getPasswordResetTokenByToken(token);
-  if (!existingToken) return { error: "token expired" };
+  if (!existingToken) return { error: "invalid token" };
+  const hasExpired = new Date(existingToken.expires) < new Date();
+  if (hasExpired) return { error: "Token has expired" };
 
-  const exisitingUser = await getUserByEmail(existingToken.email);
-  if (!exisitingUser) return { error: "User not found" };
+  const existingUser = await getUserByEmail(existingToken.email);
+  if (!existingUser) return { error: "User not found" };
 
   try {
-    //TODO: updated pwd of user
+    const hashedPwd = await bcrypt.hash(password, 10);
+    await db.user.update({
+      where: { id: existingUser.id },
+      data: { password: hashedPwd },
+    });
+    await db.resetPasswordToken.delete({ where: { id: existingToken.id } });
     return { success: "Password updated" };
   } catch (e) {
     return { error: `${e}` };

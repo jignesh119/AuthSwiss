@@ -1,13 +1,12 @@
 "use server";
-//TODO: server comps,client comps => way to use nextAuth
 import * as z from "zod";
 import { LoginSchema } from "../schemas";
 import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
 import { getUserByEmail } from "@/data/user";
-import { generateVerificationToken } from "@/lib/token";
-import { sendVerificationMail } from "@/lib/mail";
+import { generate2FactorToken, generateVerificationToken } from "@/lib/token";
+import { send2FactorMail, sendVerificationMail } from "@/lib/mail";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   //"use server" if this server action is not in a spt file
@@ -30,6 +29,12 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
       verificationToken.token,
     );
     return { success: "Confirmation email sent" };
+  }
+
+  if (existingUser.isTwoFactorEnabled && existingUser.password) {
+    const twoFactorToken = await generate2FactorToken(existingUser.email);
+    await send2FactorMail(existingUser.email, twoFactorToken.token);
+    return { twoFactor: true };
   }
 
   try {

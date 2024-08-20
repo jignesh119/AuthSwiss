@@ -38,11 +38,18 @@ export const sendVerificationMail = async (email: string, token: string) => {
 };
 
 export const sendResetPasswordMail = async (email: string, token: string) => {
-  //TODO: verify reset password request
   const resetLink = `http://localhost:3000/auth/new-password?token=${token}`;
   sendMail(
     email,
     "Reset password mail",
     `Reset your password by clicking the link below: ${resetLink}`,
+  );
+};
+
+export const send2FactorMail = async (email: string, token: string) => {
+  sendMail(
+    email,
+    "Two factor authentication mail",
+    `Your two factor authentication token is: ${token}`,
   );
 };

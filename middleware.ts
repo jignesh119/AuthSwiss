@@ -1,4 +1,3 @@
-// NOTE: continue code with antonio from 2:40
 // import { auth } from "@/auth"; not needed
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";

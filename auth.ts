@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import authConfig from "./auth.config";
 import { db } from "@/lib/db";
 import { getUserById } from "./data/user";
+import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
 
 //these endpoints are used to authenticate users at custom login/register
 export const { auth, handlers, signIn, signOut } = NextAuth({
@@ -26,8 +27,17 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       if (!existingUser!.emailVerified) return false;
 
-      //TODO: add 2fa
-      //use something like smtplib in python
+      if (existingUser?.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+          existingUser.id,
+        );
+        if (!twoFactorConfirmation) {
+          return false;
+        }
+        await db.twoFactorConfirmation.delete({
+          where: { id: twoFactorConfirmation.id },
+        });
+      }
       return true;
     },
     async session({ session, token, user }) {
