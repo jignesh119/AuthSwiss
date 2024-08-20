@@ -8,7 +8,12 @@ export const publicRoutes = ["/", "/auth/verify-email"];
  *these routes redirect to /settings
  *@type {string[]}
  */
-export const authRoutes = ["/auth/login", "/auth/register", "/auth/error"];
+export const authRoutes = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/error",
+  "/auth/reset",
+];
 
 /**
  *prefix for api auth routes

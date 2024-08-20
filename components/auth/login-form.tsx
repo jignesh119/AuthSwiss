@@ -20,6 +20,7 @@ import { FormSuccess } from "../form-success";
 import { login } from "@/actions/login";
 import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginForm(props: {}) {
   //useForm- alternative to controlledComponents(useState+manualOnSubmitValidation)
@@ -92,6 +93,14 @@ export default function LoginForm(props: {}) {
                     />
                   </FormControl>
                   <FormMessage />
+                  <Button
+                    size="sm"
+                    variant="link"
+                    asChild
+                    className="px-0 font-normal"
+                  >
+                    <Link href="/auth/reset">Forgot password?</Link>
+                  </Button>
                 </FormItem>
               )}
             />
