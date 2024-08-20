@@ -47,11 +47,12 @@ export default function LoginForm(props: {}) {
           if (data && "success" in data) {
             setSuccess(data?.success as string);
           } else if ("error" in data!) {
+            form.reset();
             setError(data?.error);
           } else if (data!.twoFactor) setShowTwoFactor(true);
         })
         .catch((e) => {
-          setError(`something went wrong`);
+          setError(`something went wrong ${e.message}`);
         });
     });
   };

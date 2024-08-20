@@ -1,19 +1,24 @@
-import { auth, signOut } from "@/auth";
+"use client";
 
-export default async function Settings(props: {}) {
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { useSession, signOut } from "next-auth/react";
+
+//async only in server comps
+export default function Settings(props: {}) {
   //method to access user session
-  const session = await auth();
+  //TODO: continue from here
+  const user = useCurrentUser();
+  const onClick = () => {
+    //if in servr comp -> signOut from "@/auth"
+    signOut();
+  };
   return (
     <div>
-      {JSON.stringify(session)}
-      <form
-        action={async () => {
-          "use server";
-          //only in server components
-          await signOut();
-        }}
-      >
-        <button type="submit">Sign out</button>
+      {JSON.stringify(user)}
+      <form>
+        <button type="submit" onClick={onClick}>
+          Sign out
+        </button>
       </form>
     </div>
   );
