@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { db } from "./db";
 import { getVerificationTokenByEmail } from "@/data/verification-token";
 import { getPasswordResetTokenByEmail } from "@/data/password-reset-token";
+
 export const generateVerificationToken = async (email: string) => {
   const token = uuidv4();
   const expires = new Date(new Date().getTime() + 3600 * 1000);
@@ -28,10 +29,12 @@ export const generateVerificationToken = async (email: string) => {
   return verificationToken;
 };
 
-const generatePasswordResetToken = async (email: string) => {
+export const generateResetPasswordToken = async (email: string) => {
   const token = uuidv4();
   const expires = new Date(new Date().getTime() + 3600 * 1000);
+
   const existingToken = await getPasswordResetTokenByEmail(email);
+
   if (existingToken) {
     await db.resetPasswordToken.delete({
       where: {
@@ -39,12 +42,14 @@ const generatePasswordResetToken = async (email: string) => {
       },
     });
   }
-  const passwordResetToken = await db.resetPasswordToken.create({
+
+  const verificationToken = await db.resetPasswordToken.create({
     data: {
       email,
       token,
       expires,
     },
   });
-  return passwordResetToken;
+
+  return verificationToken;
 };
