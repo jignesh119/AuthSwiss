@@ -19,12 +19,15 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
     //NOTE: called after signIn/signOut/... are triggered
     async signIn({ user, account, profile, email, credentials }) {
+      console.log({ user, account });
       // allow oauth without email verification
       const existingUser = await getUserById(user.id as string);
       if (account!.provider != "credentials") return true;
 
       if (!existingUser!.emailVerified) return false;
 
+      //TODO: add 2fa
+      //use something like smtplib in python
       return true;
     },
     async session({ session, token, user }) {

@@ -2,7 +2,7 @@
  *array of routes exposed to public
  *@type {string[]}
  **/
-export const publicRoutes = ["/"];
+export const publicRoutes = ["/", "/auth/verify-email"];
 
 /**
  *these routes redirect to /settings

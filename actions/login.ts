@@ -7,6 +7,7 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
 import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/token";
+import { sendVerificationMail } from "@/lib/mail";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
   //"use server" if this server action is not in a spt file
@@ -21,10 +22,14 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     return { error: "User not found" };
   }
 
-  //FIX:
-  //if user registers, sent conf email, but user still not verified, hence new token each time
   if (!existingUser.emailVerified) {
-    await generateVerificationToken(email);
+    const verificationToken = await generateVerificationToken(email);
+
+    await sendVerificationMail(
+      verificationToken.email,
+      verificationToken.token,
+    );
+    //TODO: verify verification token
     return { success: "Confirmation email sent" };
   }
 
