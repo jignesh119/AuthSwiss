@@ -25,7 +25,7 @@ model User {
   accounts              Account[]
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
-  isTwoFactorEnabled    Boolean                @default(true)
+  isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
 }
  
