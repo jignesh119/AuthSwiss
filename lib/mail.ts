@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+//TODO: disable 2fa by default update schema and deoploy suxsfuli
 
 const domain = process.env.NEXT_PUBLIC_APP_URL;
 
@@ -33,7 +34,7 @@ const sendMail = (email: string, subject: string, text: string) => {
   }
 };
 export const sendVerificationMail = async (email: string, token: string) => {
-  const confirmationLink = `${domain}auth/verify-email?token=${token}`;
+  const confirmationLink = `${domain}/auth/verify-email?token=${token}`;
   sendMail(
     email,
     "Email verification mail",
