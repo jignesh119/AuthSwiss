@@ -20,7 +20,6 @@ const NewVerificationForm = () => {
       setError("Token not found");
       return;
     }
-    console.log(token);
     //NOTE: always use serverActions in transition in client comps
     startTransition(() => {
       newVerification(token!)

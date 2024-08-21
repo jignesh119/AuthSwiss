@@ -21,7 +21,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
     //NOTE: called after signIn/signOut/... are triggered
     async signIn({ user, account, profile, email, credentials }) {
-      console.log({ user, account });
       // allow oauth without email verification
       const existingUser = await getUserById(user.id as string);
       if (account!.provider != "credentials") return true;
@@ -45,7 +44,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
-      console.log(`sessionToken: `, token);
       //HACK: for useSession/session.data.user in client/servrComp
       //field is in our db, to reflect in next-auth
       if (session.user && token.role) {

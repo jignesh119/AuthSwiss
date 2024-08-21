@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 
+const domain = process.env.NEXT_PUBLIC_APP_URL;
+
 const sendMail = (email: string, subject: string, text: string) => {
   let transporter = nodemailer.createTransport({
     service: "gmail", // or 'yahoo', 'outlook', etc.
@@ -18,16 +20,20 @@ const sendMail = (email: string, subject: string, text: string) => {
   };
 
   // Send the email
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log("Error sending email:", error);
-    } else {
-      console.log("Email sent successfully:", info.response);
-    }
-  });
+  try {
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        throw new Error("Error sending email ", error!);
+      } else {
+        console.log("Email sent successfully:", info.response);
+      }
+    });
+  } catch (error) {
+    throw new Error("Error sending email ", error!);
+  }
 };
 export const sendVerificationMail = async (email: string, token: string) => {
-  const confirmationLink = `http://localhost:3000/auth/verify-email?token=${token}`;
+  const confirmationLink = `${domain}auth/verify-email?token=${token}`;
   sendMail(
     email,
     "Email verification mail",
@@ -38,7 +44,7 @@ export const sendVerificationMail = async (email: string, token: string) => {
 };
 
 export const sendResetPasswordMail = async (email: string, token: string) => {
-  const resetLink = `http://localhost:3000/auth/new-password?token=${token}`;
+  const resetLink = `${domain}/auth/new-password?token=${token}`;
   sendMail(
     email,
     "Reset password mail",

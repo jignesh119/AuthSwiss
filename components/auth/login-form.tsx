@@ -32,6 +32,7 @@ export default function LoginForm(props: {}) {
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
   const [showTwoFactor, setShowTwoFactor] = useState<boolean>(false);
+  const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
     searchParams.get("error") === "OauthError"
       ? "Email alrealy exists with another provider."
@@ -42,7 +43,7 @@ export default function LoginForm(props: {}) {
     setError("");
     setSuccess("");
     startTransition(() => {
-      login(data)
+      login(data, callbackUrl)
         .then((data) => {
           if (data && "success" in data) {
             setSuccess(data?.success as string);

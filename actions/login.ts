@@ -11,10 +11,13 @@ import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { db } from "@/lib/db";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 
-export const login = async (values: z.infer<typeof LoginSchema>) => {
+export const login = async (
+  values: z.infer<typeof LoginSchema>,
+  callbackUrl: string,
+) => {
   //"use server" if this server action is not in a spt file
-  console.log(values);
   const validatedFields = LoginSchema.safeParse(values);
+
   if (!validatedFields.success) {
     return { error: "error validating login fields" };
   }
@@ -36,7 +39,6 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
   if (existingUser.isTwoFactorEnabled && existingUser.password) {
     if (code) {
-      //TODO: verify 2fa code
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
 
       if (!twoFactorToken) {
@@ -88,11 +90,10 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
   } catch (e) {
     if (e instanceof AuthError) {
-      console.log(e.message);
       return { error: `Something went wrong` };
     }
     throw e;

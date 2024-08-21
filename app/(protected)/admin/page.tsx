@@ -24,7 +24,6 @@ export default function AdminPage(props: {}) {
   };
   //role based auth for a server action
   const onServerActionClick = () => {
-    console.log(`admin only server action`);
     admin().then((data) => {
       if (data.error) {
         toast.error(data.error);

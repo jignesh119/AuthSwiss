@@ -50,7 +50,6 @@ const NewPasswordForm = () => {
         }
       });
     });
-    console.log(values);
   };
 
   return (
