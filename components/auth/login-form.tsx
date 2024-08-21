@@ -43,7 +43,7 @@ export default function LoginForm(props: {}) {
     setError("");
     setSuccess("");
     startTransition(() => {
-      login(data, callbackUrl)
+      login(data, callbackUrl as string)
         .then((data) => {
           if (data && "success" in data) {
             setSuccess(data?.success as string);
