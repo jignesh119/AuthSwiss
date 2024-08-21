@@ -6,7 +6,7 @@ import { useSession, signOut } from "next-auth/react";
 //async only in server comps
 export default function Settings(props: {}) {
   //method to access user session
-  //TODO: continue from here
+  //TODO: continue from here 654
   const user = useCurrentUser();
   const onClick = () => {
     //if in servr comp -> signOut from "@/auth"
