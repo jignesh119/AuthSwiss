@@ -1,6 +1,7 @@
 # AuthSwiss
 
 **AuthSwiss** is a authentication toolkit designed to streamline the integration of robust and secure authentication systems in Next.js applications. AuthSwiss offers a ready-to-use template that covers essential authentication features. This toolkit is highly customizable.
+
 > currently only designed for desktop view
 
 ## Features
@@ -80,3 +81,11 @@ Feel free to fork the repository, create a new branch, and submit a pull request
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+## Demo
+
+<img src="./public/authSwiss1.png" >
+<img src="./public/authSwiss2.png" >
+<img src="./public/authSwiss3.png" >
+<img src="./public/authSwiss4.png" >
+<img src="./public/authSwiss5.png" >
